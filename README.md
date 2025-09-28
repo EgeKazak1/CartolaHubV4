@@ -1,1 +1,177 @@
-# CartolaHubV4
+local player = game:GetService("Players").LocalPlayer
+local gui = Instance.new("ScreenGui")
+gui.Name = "CartolaV4Menu"
+gui.Parent = game:GetService("CoreGui")
+
+-- Menü açma butonu (hareket ettirilebilir)
+local openBtn = Instance.new("TextButton", gui)
+openBtn.Size = UDim2.new(0, 180, 0, 40)
+openBtn.Position = UDim2.new(0, 30, 0.5, -20)
+openBtn.BackgroundColor3 = Color3.fromRGB(80, 180, 80)
+openBtn.Text = "Cartola Hub V4"
+openBtn.Font = Enum.Font.GothamBold
+openBtn.TextSize = 20
+openBtn.TextColor3 = Color3.fromRGB(255,255,255)
+local openUICorner = Instance.new("UICorner", openBtn)
+openUICorner.CornerRadius = UDim.new(0, 10)
+
+-- Hareket ettirme kodu (JJSploit dostu)
+local dragging = false
+local dragInput, dragStart, startPos
+
+openBtn.MouseButton1Down:Connect(function(input)
+    dragging = true
+    dragStart = input.Position
+    startPos = openBtn.Position
+end)
+
+openBtn.MouseMoved:Connect(function(x, y)
+    if dragging then
+        local delta = Vector2.new(x, y) - dragStart
+        openBtn.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+
+openBtn.MouseButton1Up:Connect(function()
+    dragging = false
+end)
+
+-- Menü ana paneli
+local main = Instance.new("Frame", gui)
+main.Size = UDim2.new(0, 400, 0, 320)
+main.Position = UDim2.new(0.5, -200, 0.5, -160)
+main.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+main.Visible = false
+main.Active = true
+local mainCorner = Instance.new("UICorner", main)
+mainCorner.CornerRadius = UDim.new(0, 15)
+
+-- Üst bar
+local topBar = Instance.new("Frame", main)
+topBar.Size = UDim2.new(1, 0, 0, 40)
+topBar.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+local topBarCorner = Instance.new("UICorner", topBar)
+topBarCorner.CornerRadius = UDim.new(0, 15)
+
+-- Başlık
+local title = Instance.new("TextLabel", topBar)
+title.Text = "Cartola Hub V4"
+title.Size = UDim2.new(1, -80, 1, 0)
+title.Position = UDim2.new(0, 10, 0, 0)
+title.BackgroundTransparency = 1
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 22
+
+-- Kapatma (X) butonu
+local closeBtn = Instance.new("TextButton", topBar)
+closeBtn.Text = "X"
+closeBtn.Size = UDim2.new(0, 40, 0, 40)
+closeBtn.Position = UDim2.new(1, -40, 0, 0)
+closeBtn.BackgroundColor3 = Color3.fromRGB(200, 60, 60)
+closeBtn.TextColor3 = Color3.fromRGB(255,255,255)
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextSize = 18
+local closeUICorner = Instance.new("UICorner", closeBtn)
+closeUICorner.CornerRadius = UDim.new(0, 10)
+
+closeBtn.MouseButton1Click:Connect(function()
+    main.Visible = false
+    openBtn.Visible = true
+end)
+
+-- Büyütme/küçültme
+local resizeBtn = Instance.new("TextButton", topBar)
+resizeBtn.Text = "⛶"
+resizeBtn.Size = UDim2.new(0, 40, 0, 40)
+resizeBtn.Position = UDim2.new(1, -80, 0, 0)
+resizeBtn.BackgroundColor3 = Color3.fromRGB(60, 120, 200)
+resizeBtn.TextColor3 = Color3.fromRGB(255,255,255)
+resizeBtn.Font = Enum.Font.GothamBold
+resizeBtn.TextSize = 18
+local resizeUICorner = Instance.new("UICorner", resizeBtn)
+resizeUICorner.CornerRadius = UDim.new(0, 10)
+
+local full = false
+resizeBtn.MouseButton1Click:Connect(function()
+    if full then
+        main.Size = UDim2.new(0, 400, 0, 320)
+        main.Position = UDim2.new(0.5, -200, 0.5, -160)
+        full = false
+    else
+        main.Size = UDim2.new(0.7, 0, 0.8, 0)
+        main.Position = UDim2.new(0.15, 0, 0.1, 0)
+        full = true
+    end
+end)
+
+-- Menü açılırken
+openBtn.MouseButton1Click:Connect(function()
+    main.Visible = true
+    openBtn.Visible = false
+end)
+
+-- Buton alanı
+local btnArea = Instance.new("Frame", main)
+btnArea.Size = UDim2.new(1, -40, 1, -60)
+btnArea.Position = UDim2.new(0, 20, 0, 50)
+btnArea.BackgroundTransparency = 1
+
+-- Get Premium (Tüm Gamepass alma)
+local premiumBtn = Instance.new("TextButton", btnArea)
+premiumBtn.Text = "Get Premium (All Gamepass)"
+premiumBtn.Size = UDim2.new(1, 0, 0, 50)
+premiumBtn.Position = UDim2.new(0, 0, 0, 0)
+premiumBtn.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
+premiumBtn.TextColor3 = Color3.fromRGB(30, 30, 30)
+premiumBtn.Font = Enum.Font.GothamBold
+premiumBtn.TextSize = 20
+local premiumUICorner = Instance.new("UICorner", premiumBtn)
+premiumUICorner.CornerRadius = UDim.new(0, 8)
+
+premiumBtn.MouseButton1Click:Connect(function()
+    local passes = {
+        "Premium", "SWAT", "Criminal", "Firefighter", "VIP", "Star", "Music", "Estate", "Horse", "Helicopter"
+    }
+    for _,pass in pairs(passes) do
+        if player:FindFirstChild("Gamepasses") then
+            local gp = player.Gamepasses:FindFirstChild(pass)
+            if gp then gp.Value = true end
+        end
+    end
+    print("Tüm gamepasslar aktif edildi!")
+end)
+
+-- Ekstra script butonu ekleme fonksiyonu
+local function addScriptButton(name, yPos, callback)
+    local btn = Instance.new("TextButton", btnArea)
+    btn.Text = name
+    btn.Size = UDim2.new(1, 0, 0, 40)
+    btn.Position = UDim2.new(0, 0, 0, yPos)
+    btn.BackgroundColor3 = Color3.fromRGB(60, 60, 160)
+    btn.TextColor3 = Color3.fromRGB(255,255,255)
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 18
+    local btnCorner = Instance.new("UICorner", btn)
+    btnCorner.CornerRadius = UDim.new(0, 6)
+    btn.MouseButton1Click:Connect(callback)
+    return btn
+end
+
+-- Örnek ek script butonları
+addScriptButton("Brookhaven ESP", 60, function()
+    print("Brookhaven ESP açıldı!")
+    -- Cartola Hub V4 ESP kodunu buraya ekle!
+end)
+
+addScriptButton("Brookhaven Fly", 110, function()
+    print("Brookhaven Fly açıldı!")
+    -- Cartola Hub V4 Fly kodunu buraya ekle!
+end)
+
+addScriptButton("Brookhaven TP", 160, function()
+    print("Brookhaven TP açıldı!")
+    -- Cartola Hub V4 TP kodunu buraya ekle!
+end)
+
+-- Menüde istediğin kadar buton ekleyebilirsin!
